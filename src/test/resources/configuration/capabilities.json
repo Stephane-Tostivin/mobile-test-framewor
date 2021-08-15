@@ -1,0 +1,10 @@
+{
+    "platformName":"Android",
+    "platformVersion":"11",
+    "deviceName":"PixelXL28",
+    "automationName":"UIAutomator2",
+    "appPackage":"com.experitest.eribank",
+    "appActivity":"com.experitest.ExperiBank.LoginActivity",
+    "appLocation":"C:\\Users\\Stephane\\IdeaProjects\\freeAutomation\\src\\test\\resources\\eribank.apk",
+    "target": "http://127.0.0.1:4723/wd/hub"
+}
