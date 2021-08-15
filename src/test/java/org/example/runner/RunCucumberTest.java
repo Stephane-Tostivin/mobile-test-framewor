@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
         features = {"src/test/resources/org/example/features"},
         tags= "not @skip and not @wip",
         glue = {"org.example.stepdefinitions", "org.example.utility"},
+        monochrome = true,
         plugin = {"pretty:target/cucumber-pretty.txt",
                 "html:target/cucumber-report.html",
                 "json:target/cucumber-report.json",
