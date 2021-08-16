@@ -2,6 +2,8 @@ package org.example.pages;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.pagefactory.AndroidFindBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebElement;
@@ -25,16 +27,32 @@ public class MakePaymentPage {
     //===============================================================================================
     // Locators
     //===============================================================================================
-    private By makePaymentScreen = By.id("com.experitest.eribank:id/makePaymentView");
-    private By phoneField = By.id("com.experitest.eribank:id/phoneTextField");
-    private By nameField = By.id("com.experitest.eribank:id/nameTextField");
-    private By amountField = By.id("com.experitest.eribank:id/amountTextField");
-    private By countryField = By.id("com.experitest.eribank:id/countryTextField");
-    private By sendPaymentButton = MobileBy.AccessibilityId("Send Payment");
-    private By cancelButton = By.id("com.experitest.eribank:id/cancelButton");
-    private By yesButton = By.id("android:id/button1");
-    private By noButton = By.id("android:id/button2");
+    @AndroidFindBy(id = "makePaymentView")
+    private MobileElement makePaymentScreen;
 
+    @AndroidFindBy(id = "phoneTextField")
+    private MobileElement phoneField;
+
+    @AndroidFindBy(id = "nameTextField")
+    private MobileElement nameField;
+
+    @AndroidFindBy(id = "amountTextField")
+    private MobileElement amountField;
+
+    @AndroidFindBy(id = "countryTextField")
+    private MobileElement countryField;
+
+    @AndroidFindBy(accessibility = "Send Payment")
+    private MobileElement sendPaymentButton;
+
+    @AndroidFindBy(id = "cancelButton")
+    private MobileElement cancelButton;
+
+    @AndroidFindBy(id = "android:id/button1")
+    private MobileElement yesButton;
+
+    @AndroidFindBy(id = "android:id/button2")
+    private MobileElement noButton;
 
 
     //===============================================================================================
@@ -47,7 +65,7 @@ public class MakePaymentPage {
      */
     public boolean isMakePaymentPage() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> makePaymentScreenReady = ExpectedConditions.presenceOfElementLocated(makePaymentScreen);
+        ExpectedCondition<WebElement> makePaymentScreenReady = ExpectedConditions.visibilityOf(makePaymentScreen);
         try {
             wait.until(makePaymentScreenReady).click();
             return true;
@@ -63,7 +81,7 @@ public class MakePaymentPage {
      */
     public void setPhone(String phoneNumber) {
         if(isMakePaymentPage()) {
-            driver.findElement(phoneField).sendKeys(phoneNumber);
+            phoneField.sendKeys(phoneNumber);
         }
     }
 
@@ -73,7 +91,7 @@ public class MakePaymentPage {
      */
     public void setName(String name) {
         if(isMakePaymentPage()) {
-            driver.findElement(nameField).sendKeys(name);
+            nameField.sendKeys(name);
         }
     }
 
@@ -83,7 +101,7 @@ public class MakePaymentPage {
      */
     public void setAmount(Integer amount) {
         if(isMakePaymentPage()) {
-            driver.findElement(amountField).sendKeys(amount.toString());
+            amountField.sendKeys(amount.toString());
         }
     }
 
@@ -93,7 +111,7 @@ public class MakePaymentPage {
      */
     public void setCountry(String country) {
         if(isMakePaymentPage()) {
-            driver.findElement(countryField).sendKeys(country);
+            countryField.sendKeys(country);
         }
     }
 
@@ -110,7 +128,7 @@ public class MakePaymentPage {
      */
     public void clickSendPaymentButton() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> sendPaymentButtonReady = ExpectedConditions.presenceOfElementLocated(sendPaymentButton);
+        ExpectedCondition<WebElement> sendPaymentButtonReady = ExpectedConditions.visibilityOf(sendPaymentButton);
         try {
             wait.until(sendPaymentButtonReady).click();
         } catch (SessionNotCreatedException e) {
@@ -124,7 +142,7 @@ public class MakePaymentPage {
      */
     public PaymentHomePage confirmPayment() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> yesButtonReady = ExpectedConditions.presenceOfElementLocated(yesButton);
+        ExpectedCondition<WebElement> yesButtonReady = ExpectedConditions.visibilityOf(yesButton);
         try {
             wait.until(yesButtonReady).click();
         } catch (SessionNotCreatedException e) {
@@ -135,7 +153,7 @@ public class MakePaymentPage {
 
     public void refusePayment() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> noButtonReady = ExpectedConditions.presenceOfElementLocated(noButton);
+        ExpectedCondition<WebElement> noButtonReady = ExpectedConditions.visibilityOf(noButton);
         try {
             wait.until(noButtonReady).click();
         } catch (SessionNotCreatedException e) {
@@ -148,7 +166,7 @@ public class MakePaymentPage {
      */
     public void clickCancelButton() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> cancelButtonReady = ExpectedConditions.presenceOfElementLocated(cancelButton);
+        ExpectedCondition<WebElement> cancelButtonReady = ExpectedConditions.visibilityOf(cancelButton);
         try {
             wait.until(cancelButtonReady).click();
         } catch (SessionNotCreatedException e) {
