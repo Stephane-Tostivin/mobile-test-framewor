@@ -1,4 +1,4 @@
-@payment @wip
+@PAYMENT
 Feature: Payment
   In order to make a payment through the application
   As a valid customer user
@@ -7,7 +7,7 @@ Feature: Payment
   Background:
     Given I am logged in as a valid user
 
-  @smoke
+  @SC1 @SMOKE
   Scenario Outline: payment with valid amounts
     # Maybe the testing of various amounts should be tested through API as it is more a back-office issue
     Given the initial balance is <initialBalance>

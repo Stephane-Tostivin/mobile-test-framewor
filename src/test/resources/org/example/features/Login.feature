@@ -1,8 +1,8 @@
-@login
+@LOGIN
 Feature: Login
   This is where we test the login to the Eribank mobile application
 
-  @smoke
+  @SC1 @SMOKE
   Scenario Outline: login with correct credentials
     Given I open the application
     When I enter  username <username> with password <password>
@@ -14,6 +14,7 @@ Feature: Login
       |"company"|"company"|
 
 
+  @SC2
   Scenario Outline: login with incorrect credentials
     Given I open the application
     When I enter  username <username> with password <password>
