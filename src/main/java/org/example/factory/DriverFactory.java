@@ -39,13 +39,13 @@ public class DriverFactory {
 
         logger.log(Level.INFO, "Initializing driver");
 
-        // Set capabilities according to what has been requested through the environment variables
-        // By default: Android 11 on PixelXL28
-        String platformName = System.getProperty("PlatformName", caps.getPlatform().name());
-        String platformVersion = System.getProperty("PlatformVersion", "11");
-        String deviceName = System.getProperty("DeviceName", "PixelXL28");
+        // Set capabilities according to what has been requested through the environment variables (for Jenkins)
+        // By default: the values defined in the capabilities.json
+        String platformName = System.getProperty("PlatformName", caps.getCapability(MobileCapabilityType.PLATFORM_NAME).toString());
+        String platformVersion = System.getProperty("PlatformVersion", caps.getCapability(MobileCapabilityType.PLATFORM_VERSION).toString());
+        String deviceName = System.getProperty("DeviceName", caps.getCapability(MobileCapabilityType.DEVICE_NAME).toString());
 
-        caps.setCapability(MobileCapabilityType.VERSION, platformVersion);
+        caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
         caps.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
 
         if(platformName.equalsIgnoreCase("android")) {

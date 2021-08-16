@@ -29,13 +29,12 @@ public class CapabilitiesReader {
         // - the application needs to be reinstalled (app instead of appPackage and appActivity)
         // - test on an emulator/simulator or on a real device (deviceName)
         // - the platform (Android / iOS) and some caps for the // tests: udid and wdaLocalPort for iOS
-//        caps.setCapability(MobileCapabilityType.PLATFORM_NAME, acceis.get("platformName"));
-//        caps.setCapability(MobileCapabilityType.VERSION, acceis.get("platformVersion"));
-//        caps.setCapability(MobileCapabilityType.DEVICE_NAME, acceis.get("deviceName"));
+        caps.setCapability(MobileCapabilityType.PLATFORM_NAME, acceis.get("platformName"));
+        caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, acceis.get("platformVersion"));
+        caps.setCapability(MobileCapabilityType.DEVICE_NAME, acceis.get("deviceName"));
         caps.setCapability("appActivity", acceis.get("appActivity"));
         caps.setCapability("appPackage", acceis.get("appPackage"));
-        //caps.setCapability(MobileCapabilityType.APP, acceis.get("appLocation"));
-
+        caps.setCapability(MobileCapabilityType.APP, acceis.get("appLocation"));
         return caps;
     }
 
