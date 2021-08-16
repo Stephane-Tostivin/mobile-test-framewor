@@ -1,9 +1,9 @@
 {
     "platformName": "Android",
-    "platformVersion":"11",
+    "platformVersion":"9",
     "deviceName":"PixelXL28",
     "appPackage":"com.experitest.eribank",
     "appActivity":"com.experitest.ExperiBank.LoginActivity",
-    "appLocation":"C:\\Users\\Stephane\\IdeaProjects\\freeAutomation\\src\\test\\resources\\eribank.apk",
+    "appLocation":"C:\\Users\\Stephane\\IdeaProjects\\mobileTestFramework\\src\\test\\resources\\eribank.apk",
     "target": "http://127.0.0.1:4723/wd/hub"
 }
