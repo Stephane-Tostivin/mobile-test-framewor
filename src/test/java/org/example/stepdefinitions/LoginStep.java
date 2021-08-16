@@ -4,7 +4,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.example.pages.LoginPage;
-import org.example.qa.factory.DriverFactory;
+import org.example.factory.DriverFactory;
 import org.testng.Assert;
 
 import java.util.logging.Logger;

@@ -1,4 +1,4 @@
-package org.example.qa.utils;
+package org.example.utils;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
@@ -13,8 +13,8 @@ public class UIActions {
     public static final long WAITTIME = 10;
 
     public UIActions(AppiumDriver appiumDriver) {
-        PageFactory.initElements(new AppiumFieldDecorator(appiumDriver), this);
         driver = appiumDriver;
+        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
     public void waitForVisibility(MobileElement element) {

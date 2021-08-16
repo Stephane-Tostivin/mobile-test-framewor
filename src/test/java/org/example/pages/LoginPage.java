@@ -1,10 +1,13 @@
 package org.example.pages;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
-import org.openqa.selenium.By;
+import io.appium.java_client.MobileElement;
+import io.appium.java_client.pagefactory.AndroidFindBy;
+import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,6 +22,7 @@ public class LoginPage {
 
     public LoginPage(AppiumDriver driver) {
         this.driver = driver;
+        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
 
@@ -32,13 +36,26 @@ public class LoginPage {
     //===============================================================================================
     // Locators
     //===============================================================================================
-    // TODO: remove the package name from the locator using id, it is not necessary
-    private By loginScreen = By.id("android:id/title");
-    private By usernameField = MobileBy.AccessibilityId("Uname");
-    private By passwordField = MobileBy.AccessibilityId("Password");
-    private By loginBtn = By.id("com.experitest.eribank:id/loginButton");
-    private By loginErrorMsg = By.id("android:id/message");
-    private By paymentScreen = By.id("com.experitest.eribank:id/paymentHomeView");
+    /* The locators can be defined both for the Android and the iOS application
+       using the appropriate annotation */
+    @AndroidFindBy(id = "android:id/title")
+    @iOSXCUITFindBy(accessibility = "title")
+    private MobileElement loginScreen;
+
+    @AndroidFindBy(accessibility = "Uname")
+    private MobileElement usernameField;
+
+    @AndroidFindBy(accessibility = "Password")
+    private MobileElement passwordField;
+
+    @AndroidFindBy(id = "loginButton")
+    private MobileElement loginBtn;
+
+    @AndroidFindBy(id = "android:id/message")
+    private MobileElement loginErrorMsg;
+
+    @AndroidFindBy(id = "paymentHomeView")
+    private MobileElement paymentScreen;
 
 
     //===============================================================================================
@@ -53,7 +70,7 @@ public class LoginPage {
     public boolean isloginPage() {
         // TODO: define a generic method to wait for a WebElement that should be called instead of repeating those 2 lignes each time
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> loginScreenReady = ExpectedConditions.presenceOfElementLocated(loginScreen);
+        ExpectedCondition<WebElement> loginScreenReady = ExpectedConditions.visibilityOf(loginScreen);
         try {
             wait.until(loginScreenReady).click();
             return true;
@@ -69,7 +86,8 @@ public class LoginPage {
      */
     public void setUsername(String username) {
         if(isloginPage()) {
-            driver.findElement(usernameField).sendKeys(username);
+            usernameField.sendKeys(username);
+            //sendKeys(usernameField, username);
         }
     }
 
@@ -79,7 +97,7 @@ public class LoginPage {
      */
     public void setPassword(String password) {
         if(isloginPage()) {
-            driver.findElement(passwordField).sendKeys(password);
+            passwordField.sendKeys(password);
         }
     }
 
@@ -88,7 +106,7 @@ public class LoginPage {
      */
     public void clickLogin() {
         if(isloginPage()) {
-            driver.findElement(loginBtn).click();
+            loginBtn.click();
         }
     }
 
@@ -125,7 +143,7 @@ public class LoginPage {
      */
     public boolean isLogged() {
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> paymentScreenReady = ExpectedConditions.presenceOfElementLocated(paymentScreen);
+        ExpectedCondition<WebElement> paymentScreenReady = ExpectedConditions.visibilityOf(paymentScreen);
 
         try {
             wait.until(paymentScreenReady);
@@ -143,7 +161,7 @@ public class LoginPage {
     public String getErrorMessage() {
         String errorMsg = null;
         WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> errorMessageReady = ExpectedConditions.presenceOfElementLocated(loginErrorMsg);
+        ExpectedCondition<WebElement> errorMessageReady = ExpectedConditions.visibilityOf(loginErrorMsg);
         return errorMsg = wait.until(errorMessageReady).getText();
 
     }

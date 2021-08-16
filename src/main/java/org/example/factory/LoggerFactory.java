@@ -1,4 +1,4 @@
-package org.example.qa.factory;
+package org.example.factory;
 
 import java.io.IOException;
 import java.io.InputStream;

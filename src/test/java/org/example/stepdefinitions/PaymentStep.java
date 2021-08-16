@@ -8,7 +8,7 @@ import io.cucumber.java.en.When;
 import org.example.pages.LoginPage;
 import org.example.pages.MakePaymentPage;
 import org.example.pages.PaymentHomePage;
-import org.example.qa.factory.DriverFactory;
+import org.example.factory.DriverFactory;
 import org.testng.Assert;
 
 import java.util.List;
