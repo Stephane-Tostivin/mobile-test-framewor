@@ -1,4 +1,4 @@
-package org.example.runner;
+package org.example.runners;
 
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
