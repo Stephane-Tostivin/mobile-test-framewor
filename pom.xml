@@ -76,12 +76,13 @@
             <version>20210307</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber-jvm -->
+        <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber6-jvm -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-cucumber-jvm</artifactId>
+            <artifactId>allure-cucumber6-jvm</artifactId>
             <version>${allure.version}</version>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-attachments -->
         <dependency>
