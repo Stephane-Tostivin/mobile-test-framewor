@@ -3,26 +3,19 @@ package org.example.pages;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
-import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class LoginPage {
+public class LoginPage extends BasePage {
 
     private AppiumDriver driver;
     private static Logger logger = Logger.getLogger(LoginPage.class.getName());
 
-    public LoginPage(AppiumDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+    public LoginPage() throws IOException {
+        super();
     }
 
 
@@ -68,14 +61,10 @@ public class LoginPage {
      * @return true or false
      */
     public boolean isloginPage() {
-        // TODO: define a generic method to wait for a WebElement that should be called instead of repeating those 2 lignes each time
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> loginScreenReady = ExpectedConditions.visibilityOf(loginScreen);
         try {
-            wait.until(loginScreenReady).click();
+            waitForVisibility(loginScreen);
             return true;
-        } catch (SessionNotCreatedException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+        } catch (Exception e) {
             return false;
         }
     }
@@ -85,10 +74,7 @@ public class LoginPage {
      * @param username
      */
     public void setUsername(String username) {
-        if(isloginPage()) {
-            usernameField.sendKeys(username);
-            //sendKeys(usernameField, username);
-        }
+            sendKeys(usernameField, username);
     }
 
     /**
@@ -96,18 +82,14 @@ public class LoginPage {
      * @param password
      */
     public void setPassword(String password) {
-        if(isloginPage()) {
-            passwordField.sendKeys(password);
-        }
+            sendKeys(passwordField, password);
     }
 
     /**
      * Click on the Login button
      */
     public void clickLogin() {
-        if(isloginPage()) {
-            loginBtn.click();
-        }
+            click(loginBtn);
     }
 
     /**
@@ -142,14 +124,10 @@ public class LoginPage {
      * @return true or false
      */
     public boolean isLogged() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> paymentScreenReady = ExpectedConditions.visibilityOf(paymentScreen);
-
         try {
-            wait.until(paymentScreenReady);
+            waitForVisibility(paymentScreen);
             return true;
-        } catch (SessionNotCreatedException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+        } catch (Exception e) {
             return false;
         }
     }
@@ -160,9 +138,7 @@ public class LoginPage {
      */
     public String getErrorMessage() {
         String errorMsg = null;
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> errorMessageReady = ExpectedConditions.visibilityOf(loginErrorMsg);
-        return errorMsg = wait.until(errorMessageReady).getText();
+        return errorMsg = getAttribute(loginErrorMsg, "text");
 
     }
 }

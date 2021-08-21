@@ -4,15 +4,17 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.example.pages.LoginPage;
-import org.example.factory.DriverFactory;
 import org.testng.Assert;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 public class LoginStep {
 
-    private LoginPage loginPage = new LoginPage(DriverFactory.getDriver());
-    private static Logger logger = Logger.getLogger(LoginStep.class.getName());
+    private LoginPage loginPage = new LoginPage();
+
+    public LoginStep() throws IOException {
+    }
 
 
     //------------------------------------------------------------------------------------------------------------
