@@ -77,7 +77,7 @@ public class DriverFactory {
      * Get the driver for the local thread
      * @return the local thread driver
      */
-    public static synchronized AppiumDriver getDriver() {
+    public static AppiumDriver getDriver() {
         return tlDriver.get();
     }
 

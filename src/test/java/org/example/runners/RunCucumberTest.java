@@ -6,12 +6,13 @@ import org.testng.annotations.Test;
 
 @CucumberOptions(
         features = {"src/test/resources/org/example/features"},
-        glue = {"org.example.stepdefinitions", "org.example.utility"},
-        plugin = {"pretty:target/cucumber-pretty.txt",
+        glue = {"org.example.stepdefinitions"},
+         plugin = {"pretty",
                 "html:target/cucumber-report.html",
                 "json:target/cucumber-report.json",
                 "rerun:target/failed-rerun.txt"
-        }
+        },
+        monochrome = true
 )
 
 @Test
