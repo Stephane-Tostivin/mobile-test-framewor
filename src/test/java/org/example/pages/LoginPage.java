@@ -71,7 +71,7 @@ public class LoginPage extends BasePage {
      * @param username
      */
     public void setUsername(String username) {
-        logger.log(Level.INFO, "Set username to " + username);
+        logger.log(Level.INFO, "Set username to: " + username);
         sendKeys(usernameField, username);
     }
 
@@ -80,7 +80,7 @@ public class LoginPage extends BasePage {
      * @param password
      */
     public void setPassword(String password) {
-        logger.log(Level.INFO, "Set password to " + password);
+        logger.log(Level.INFO, "Set password to: " + password);
         sendKeys(passwordField, password);
     }
 
