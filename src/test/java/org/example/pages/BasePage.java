@@ -11,6 +11,7 @@ import org.example.factory.DriverFactory;
 import org.example.utils.CapabilitiesReader;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -38,7 +39,7 @@ public class BasePage {
     public static final long WAITTIME = 10;
 
     // Constructor
-    public BasePage() throws IOException {
+    public BasePage() {
         this.driver = getDriver();
         PageFactory.initElements(new AppiumFieldDecorator(this.driver), this);
     }
@@ -53,6 +54,11 @@ public class BasePage {
      * @param element
      */
     public void waitForVisibility(MobileElement element) {
+        WebDriverWait wait = new WebDriverWait(driver, WAITTIME);
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    public void waitForVisibility(WebElement element) {
         WebDriverWait wait = new WebDriverWait(driver, WAITTIME);
         wait.until(ExpectedConditions.visibilityOf(element));
     }
