@@ -1,0 +1,15 @@
+{
+  "_comment" : "Configuration for Hub - hubConfig.json",
+  "port": 4444,
+  "newSessionWaitTimeout": -1,
+  "servlets": [],
+  "withoutServlets": [],
+  "custom": {},
+  "capabilityMatcher": "org.openqa.grid.internal.utils.DefaultCapabilityMatcher",
+  "throwOnCapabilityNotPresent": true,
+  "cleanupCycle": 2000,
+  "role": "hub",
+  "debug": false,
+  "browserTimeout": 0,
+  "timeout": 1800
+}
