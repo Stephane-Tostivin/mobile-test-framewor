@@ -7,7 +7,7 @@ Feature: Payment
   Background:
     Given I am logged in as a valid user
 
-  @SC1 @SMOKE
+  @SC1
   Scenario Outline: payment with valid amount
     # Maybe the testing of various amounts should be tested through API as it is more a back-office issue
     Given the initial balance is <initialBalance>
@@ -18,24 +18,15 @@ Feature: Payment
     And I confirm the payment
     Then the accountBalance should be updated to <updatedBalance>
 
+    @SMOKE
     Examples:
     | initialBalance | amount | updatedBalance  |
     | 100.00         | 50     | 50.00           |
 
-  @SC2
-  Scenario Outline: payment with various amounts
-    # Maybe the testing of various amounts should be tested through API as it is more a back-office issue
-    Given the initial balance is <initialBalance>
-    Given I am in the payment screen
-    When I make a payment of <amount> with parameters:
-      | name      | phoneNumber | country |
-      | Andre     | 0600000000  | France  |
-    And I confirm the payment
-    Then the accountBalance should be updated to <updatedBalance>
-
+    @REGRESSION
     Examples:
-      | initialBalance | amount | updatedBalance  |
-      | 100.00         | 0      | 100.00          |
-      | 100.00         | 100    | 0.00            |
-      | 100.00         | 150    | -50.00          |
-      | 100.00         | 100000 | -99900.00       |
+    | initialBalance | amount | updatedBalance  |
+    | 100.00         | 0      | 100.00          |
+    | 100.00         | 100    | 0.00            |
+    | 100.00         | 150    | -50.00          |
+    | 100.00         | 100000 | -99900.00       |
