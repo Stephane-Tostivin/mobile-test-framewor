@@ -8,7 +8,7 @@ import org.testng.annotations.Test;
         features = {"src/test/resources/org/example/features"},
         glue = {"org.example.stepdefinitions", "org.example.utility"},
          plugin = {"pretty",
-                "io.qameta.allure.cucumber4jvm.AllureCucumber4Jvm",
+                "io.qameta.allure.cucumber6jvm.AllureCucumber6Jvm",
                 "rerun:target/failed-rerun.txt"
         },
         monochrome = true
