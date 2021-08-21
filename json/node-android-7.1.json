@@ -1,0 +1,24 @@
+{
+  "capabilities": [
+    {
+      "browserName": "Android Nougat",
+      "version": "7.1.0",
+      "platform": "ANDROID",
+      "maxInstances": 1
+    }
+  ],
+  "configuration": {
+    "_comment" : "Configuration for device on Android Nougat",
+    "cleanUpCycle": 2000,
+    "timeout": 20000,
+    "proxy": "org.openqa.grid.selenium.proxy.WebDriverRemoteProxy",
+    "host" : "127.0.0.1",
+    "port": 4723,
+    "register": true,
+    "registerCycle": 1000,
+    "hubHost": "192.168.1.33",
+    "hubPort": 4444,
+    "session-override": true,
+    "maxSession": 1
+  }
+}
