@@ -7,7 +7,6 @@ import org.example.pages.LoginPage;
 import org.testng.Assert;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class LoginStep {
 
