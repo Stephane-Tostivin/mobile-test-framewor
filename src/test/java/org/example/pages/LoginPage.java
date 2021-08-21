@@ -1,21 +1,17 @@
 package org.example.pages;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
 import io.appium.java_client.pagefactory.iOSXCUITFindBy;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LoginPage extends BasePage {
 
-    private AppiumDriver driver;
     private static Logger logger = Logger.getLogger(LoginPage.class.getName());
 
-    public LoginPage() throws IOException {
-        super();
+    public LoginPage() {
     }
 
 
@@ -61,6 +57,7 @@ public class LoginPage extends BasePage {
      * @return true or false
      */
     public boolean isloginPage() {
+        logger.log(Level.INFO, "Make sure login screen is visible");
         try {
             waitForVisibility(loginScreen);
             return true;
@@ -74,7 +71,8 @@ public class LoginPage extends BasePage {
      * @param username
      */
     public void setUsername(String username) {
-            sendKeys(usernameField, username);
+        logger.log(Level.INFO, "Set username to " + username);
+        sendKeys(usernameField, username);
     }
 
     /**
@@ -82,14 +80,16 @@ public class LoginPage extends BasePage {
      * @param password
      */
     public void setPassword(String password) {
-            sendKeys(passwordField, password);
+        logger.log(Level.INFO, "Set password to " + password);
+        sendKeys(passwordField, password);
     }
 
     /**
      * Click on the Login button
      */
     public void clickLogin() {
-            click(loginBtn);
+        logger.log(Level.INFO, "Click login button");
+        click(loginBtn);
     }
 
     /**
@@ -97,11 +97,10 @@ public class LoginPage extends BasePage {
      * @return PaymentHomePage
      */
     public PaymentHomePage doLogin() {
-        logger.log(Level.INFO, "Login with username " + LOGIN_USERNAME + " and password " + LOGIN_PASSWORD);
         setUsername(LOGIN_USERNAME);
         setPassword(LOGIN_PASSWORD);
         clickLogin();
-        return new PaymentHomePage(driver);
+        return new PaymentHomePage();
     }
 
     /**
@@ -111,11 +110,10 @@ public class LoginPage extends BasePage {
      * @return PaymentHomePage
      */
     public PaymentHomePage doLogin(String username, String password) {
-        logger.log(Level.INFO, "Login with username " + username + " and password " + password);
         setUsername(username);
         setPassword(password);
         clickLogin();
-        return new PaymentHomePage(driver);
+        return new PaymentHomePage();
     }
 
 
@@ -124,6 +122,7 @@ public class LoginPage extends BasePage {
      * @return true or false
      */
     public boolean isLogged() {
+        logger.log(Level.INFO, "Make sure the user has been authenticated by changing screen");
         try {
             waitForVisibility(paymentScreen);
             return true;
@@ -137,6 +136,7 @@ public class LoginPage extends BasePage {
      * @return the text in the error message box
      */
     public String getErrorMessage() {
+        logger.log(Level.INFO, "Get the error message when login is incorrect");
         String errorMsg = null;
         return errorMsg = getAttribute(loginErrorMsg, "text");
 

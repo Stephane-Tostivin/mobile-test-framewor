@@ -1,31 +1,15 @@
 package org.example.pages;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import org.openqa.selenium.By;
 import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MakePaymentPage {
+public class MakePaymentPage extends BasePage {
 
-    private AppiumDriver driver;
     private static Logger logger = Logger.getLogger(MakePaymentPage.class.getName());
-
-    public MakePaymentPage(AppiumDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
-    }
-
 
     //===============================================================================================
     // Locators
@@ -67,12 +51,11 @@ public class MakePaymentPage {
      * @return true or false
      */
     public boolean isMakePaymentPage() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> makePaymentScreenReady = ExpectedConditions.visibilityOf(makePaymentScreen);
+        logger.log(Level.INFO, "Make sure the Make payment screen is displayed");
         try {
-            wait.until(makePaymentScreenReady).click();
+            waitForVisibility(makePaymentScreen);
             return true;
-        } catch (SessionNotCreatedException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());
             return false;
         }
@@ -83,9 +66,8 @@ public class MakePaymentPage {
      * @param phoneNumber
      */
     public void setPhone(String phoneNumber) {
-        if(isMakePaymentPage()) {
-            phoneField.sendKeys(phoneNumber);
-        }
+        logger.log(Level.INFO, "Set phone number to: " + phoneNumber);
+        sendKeys(phoneField, phoneNumber);
     }
 
     /**
@@ -93,9 +75,8 @@ public class MakePaymentPage {
      * @param name
      */
     public void setName(String name) {
-        if(isMakePaymentPage()) {
-            nameField.sendKeys(name);
-        }
+        logger.log(Level.INFO, "Set name to:" + name);
+        sendKeys(nameField, name);
     }
 
     /**
@@ -103,9 +84,8 @@ public class MakePaymentPage {
      * @param amount
      */
     public void setAmount(Integer amount) {
-        if(isMakePaymentPage()) {
-            amountField.sendKeys(amount.toString());
-        }
+        logger.log(Level.INFO, "Set amount to:" + amount);
+        sendKeys(amountField, amount.toString());
     }
 
     /**
@@ -113,9 +93,8 @@ public class MakePaymentPage {
      * @param country
      */
     public void setCountry(String country) {
-        if(isMakePaymentPage()) {
-            countryField.sendKeys(country);
-        }
+        logger.log(Level.INFO, "Set country to:" + country);
+        sendKeys(countryField, country);
     }
 
     /**
@@ -130,10 +109,9 @@ public class MakePaymentPage {
      * Click on the send Payment button
      */
     public void clickSendPaymentButton() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> sendPaymentButtonReady = ExpectedConditions.visibilityOf(sendPaymentButton);
+        logger.log(Level.INFO, "Click on payment button");
         try {
-            wait.until(sendPaymentButtonReady).click();
+            click(sendPaymentButton);
         } catch (SessionNotCreatedException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
@@ -144,21 +122,19 @@ public class MakePaymentPage {
      * @return PaymentHomePage
      */
     public PaymentHomePage confirmPayment() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> yesButtonReady = ExpectedConditions.visibilityOf(yesButton);
+        logger.log(Level.INFO, "Click on confirm button");
         try {
-            wait.until(yesButtonReady).click();
+            click(yesButton);
         } catch (SessionNotCreatedException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
-        return new PaymentHomePage(driver);
+        return new PaymentHomePage();
     }
 
     public void refusePayment() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> noButtonReady = ExpectedConditions.visibilityOf(noButton);
+        logger.log(Level.INFO, "Click on refuse button");
         try {
-            wait.until(noButtonReady).click();
+            click(noButton);
         } catch (SessionNotCreatedException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
@@ -168,10 +144,9 @@ public class MakePaymentPage {
      * Cancel the information set in the Make Payment screen
      */
     public void clickCancelButton() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> cancelButtonReady = ExpectedConditions.visibilityOf(cancelButton);
+        logger.log(Level.INFO, "Click on cancel button");
         try {
-            wait.until(cancelButtonReady).click();
+            click(cancelButton);
         } catch (SessionNotCreatedException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }

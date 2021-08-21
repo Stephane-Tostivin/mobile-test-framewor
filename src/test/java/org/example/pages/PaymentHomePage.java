@@ -1,28 +1,19 @@
 package org.example.pages;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
-import org.openqa.selenium.By;
 import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PaymentHomePage {
+public class PaymentHomePage extends BasePage {
 
-    private AppiumDriver driver;
     private static Logger logger = Logger.getLogger(PaymentHomePage.class.getName());
 
-    public PaymentHomePage(AppiumDriver driver) {
-        this.driver = driver;
-        PageFactory.initElements(new AppiumFieldDecorator(driver), this);
+    public PaymentHomePage() {
     }
 
 
@@ -35,7 +26,8 @@ public class PaymentHomePage {
     private MobileElement paymentHomeScreen;
 
     // This one is a locator for a webelement in a webview - not a mobile element
-    private By balanceText = By.xpath("/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]");
+    @FindBy(xpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout[2]/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.webkit.WebView/android.webkit.WebView/android.view.View[1]")
+    private WebElement balanceText;
 
     @AndroidFindBy(id = "makePaymentButton")
     private MobileElement buttonMakePayment;
@@ -49,13 +41,11 @@ public class PaymentHomePage {
      * @return true or false
      */
     public boolean isPaymentHomePage() {
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> paymentScreenReady = ExpectedConditions.visibilityOf(paymentHomeScreen);
+        logger.log(Level.INFO, "Make sure the Payment home page is displayed");
         try {
-            wait.until(paymentScreenReady);
+            waitForVisibility(paymentHomeScreen);
             return true;
-        } catch (SessionNotCreatedException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+        } catch (Exception e) {
             return false;
         }
     }
@@ -68,11 +58,10 @@ public class PaymentHomePage {
         String balanceMessage = null;
 
         // The message is displayed after some time, so pls wait...
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        ExpectedCondition<WebElement> balanceMessageReady = ExpectedConditions.presenceOfElementLocated(balanceText);
         try {
-            wait.until(balanceMessageReady);
-            balanceMessage = driver.findElement(balanceText).getText();
+            waitForVisibility(balanceText);
+            logger.log(Level.INFO, "Get the balance message");
+            balanceMessage = balanceText.getText();
         } catch (SessionNotCreatedException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
@@ -84,8 +73,9 @@ public class PaymentHomePage {
      * @return
      */
     public MakePaymentPage clickMakePaymentButton() {
+        logger.log(Level.INFO, "Click on the Make Payment button");
         buttonMakePayment.click();
-        return new MakePaymentPage(driver);
+        return new MakePaymentPage();
     }
 
 }
