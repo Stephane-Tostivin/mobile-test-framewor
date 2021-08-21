@@ -6,14 +6,9 @@ import io.cucumber.java.en.When;
 import org.example.pages.LoginPage;
 import org.testng.Assert;
 
-import java.io.IOException;
-
 public class LoginStep {
 
     private LoginPage loginPage = new LoginPage();
-
-    public LoginStep() throws IOException {
-    }
 
 
     //------------------------------------------------------------------------------------------------------------

@@ -8,20 +8,17 @@ import io.cucumber.java.en.When;
 import org.example.pages.LoginPage;
 import org.example.pages.MakePaymentPage;
 import org.example.pages.PaymentHomePage;
-import org.example.factory.DriverFactory;
 import org.testng.Assert;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PaymentStep {
 
-    private LoginPage loginPage = new LoginPage(DriverFactory.getDriver());
+    private LoginPage loginPage = new LoginPage();
     private PaymentHomePage paymentHomePage;
     private MakePaymentPage makePaymentPage;
-    private static Logger logger = Logger.getLogger(PaymentStep.class.getName());
 
 
     //------------------------------------------------------------------------------------------------------------
@@ -59,7 +56,6 @@ public class PaymentStep {
         String country = params.get(0).get("country");
 
         // Make the payment with all the expected items
-        logger.log(Level.INFO, "Make a payment of " + amount + "$ for " + name + " (tel.: " + phoneNumber + ") from " + country);
         makePaymentPage.setPhone(phoneNumber);
         makePaymentPage.setAmount(amount);
         makePaymentPage.setName(name);
