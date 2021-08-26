@@ -40,18 +40,45 @@ public class CapabilitiesReader {
     public static DesiredCapabilities getCaps(JSONObject config) {
         DesiredCapabilities caps = new DesiredCapabilities();
 
-        // If proper system environment variable is defined, we take its value
-        // So that the user or Jenkins can change the capabilities on the fly
-        // Default values: capabilities file
-        caps.setCapability(System.getProperty("PLATFORM_NAME", MobileCapabilityType.PLATFORM_NAME), config.get("platformName"));
-        caps.setCapability(System.getProperty("PLATFORM_VERSION", MobileCapabilityType.PLATFORM_VERSION), config.get("platformVersion"));
-        caps.setCapability(System.getProperty("DEVICE_NAME", MobileCapabilityType.DEVICE_NAME), config.get("deviceName"));
+        // By default we take the value from capabilities files
+        // Except if a system env variable is defined with the expected name
+        // It allows the user or Jenkins to change the capabilities on the fly
+
+        // PlatformName
+        String platformName = System.getenv("PLATFORM_NAME");
+        if(platformName == null) {
+            caps.setCapability(MobileCapabilityType.PLATFORM_NAME, config.get("platformName"));
+        } else {
+            caps.setCapability(MobileCapabilityType.PLATFORM_NAME, platformName);
+        }
+
+        // PlatformVersion
+        String platformVersion = System.getenv("PLATFORM_VERSION");
+        if(platformVersion == null) {
+            caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, config.get("platformVersion"));
+        } else {
+            caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
+        }
+
+        // DeviceName
+        String deviceName = System.getenv("DEVICE_NAME");
+        if(deviceName == null) {
+            caps.setCapability(MobileCapabilityType.DEVICE_NAME, config.get("deviceName"));
+        } else {
+            caps.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
+        }
 
         // Set the package location as capability APP only if installation is required
-        String installRequired = System.getProperty("TO_INSTALL");
-        if(installRequired != null && !installRequired.isEmpty()) {
+        String installRequired = System.getenv("TO_INSTALL");
+        String appLocation = System.getenv("APP_LOCATION");
+        if(installRequired != null) {
+            // The APP should be installed from a given location, or by default from the path given in the capabilities file
             logger.log(Level.INFO, "Capability APP set ==> new installation of the application");
-            caps.setCapability(System.getProperty("APP_LOCATION", MobileCapabilityType.APP), config.get("appLocation"));
+            if(appLocation == null) {
+                caps.setCapability(MobileCapabilityType.APP, config.get("appLocation"));
+            } else {
+                caps.setCapability(MobileCapabilityType.APP, appLocation);
+            }
         }
         caps.setCapability("appActivity", config.get("appActivity"));
         caps.setCapability("appPackage", config.get("appPackage"));
@@ -69,7 +96,11 @@ public class CapabilitiesReader {
 
         // Read the targeted System Under Test from the system environment variable TARGET_SUT
         // By default: local
-        String targetSUT = System.getProperty("TARGET_SUT", "local");
+        String targetSUT = System.getenv("TARGET_SUT");
+        if(targetSUT == null) {
+            targetSUT = "local";
+        }
+
         logger.log(Level.INFO, "The test system is: " + targetSUT);
 
         // Get the Appium URL if target is local
@@ -79,10 +110,21 @@ public class CapabilitiesReader {
 
         // Get the Appium URL if target is BrowserStack
         else if(targetSUT.equalsIgnoreCase("browserstack")) {
-            // If proper system environment variable is defined, we take the value
-            // Otherwise we read the capabilities file
-            String username = System.getProperty("BROWSERSTACK_USERNAME", config.getJSONObject("BrowserStackEnv").getString("username"));
-            String accessKey = System.getProperty("BROWSERSTACK_ACCESS_KEY", config.getJSONObject("BrowserStackEnv").getString("access_key"));
+            // Check if BROWSERSTACK_USERNAME is defined as system env variable
+            // Otherwise we take the value in the capabilities files
+            String username = System.getenv("BROWSERSTACK_USERNAME");
+            if(username == null) {
+                username = config.getJSONObject("BrowserStackEnv").getString("username");
+            }
+
+            // Check if BROWSERSTACK_ACCESS_KEY is defined as system env variable
+            // Otherwise we take the value in the capabilities files
+            String accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
+            if(accessKey == null) {
+                accessKey = config.getJSONObject("BrowserStackEnv").getString("access_key");
+            }
+
+            // Build the URL
             AppiumHubURL = "http://"+username+":"+accessKey+"@"+config.getJSONObject("BrowserStackEnv").getString("server")+"/wd/hub";
         }
 
