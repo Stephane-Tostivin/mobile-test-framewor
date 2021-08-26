@@ -1,9 +1,20 @@
 {
     "platformName": "Android",
-    "platformVersion":"9",
+    "platformVersion":"11",
     "deviceName":"PixelXL28",
     "appPackage":"com.experitest.eribank",
     "appActivity":"com.experitest.ExperiBank.LoginActivity",
     "appLocation":"C:\\Users\\Stephane\\IdeaProjects\\mobileTestFramework\\src\\test\\resources\\eribank.apk",
-    "target": "http://127.0.0.1:4723/wd/hub"
+
+    "localEnv": {
+        "target": "local",
+        "url": "http://127.0.0.1:4723/wd/hub"
+    },
+
+    "BrowserStackEnv" : {
+        "target": "BrowserStack",
+        "server": "hub-cloud.browserstack.com",
+        "username": "stphanetostivin_H4MPCR",
+        "access_key": "vVvkxq2qa6UwafYxPPB1"
+    }
 }

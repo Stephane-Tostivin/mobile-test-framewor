@@ -7,6 +7,7 @@ import io.cucumber.java.Scenario;
 import org.apache.commons.io.FileUtils;
 import org.example.factory.DriverFactory;
 import org.example.utils.CapabilitiesReader;
+import org.json.JSONObject;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -23,20 +24,29 @@ public class Hook {
     // Appium driver
     private static AppiumDriver driver;
     private static CapabilitiesReader capabilitiesReader;
+    JSONObject config;
     DesiredCapabilities caps;
+    String appiumHubUrl;
 
     // Logger
     private static Logger logger = Logger.getLogger(Hook.class.getName());
 
 
     @Before()
-    public void setUp() throws URISyntaxException, IOException {
+    public void setUp() {
         logger.log(Level.INFO, "Reading the capabilities");
         capabilitiesReader = new CapabilitiesReader();
-        caps = capabilitiesReader.getCaps();
 
+        // Read the configuration file once
+        config = capabilitiesReader.getConfiguration();
+
+        // Build the capabilities and the Appium Hub URL
+        caps = capabilitiesReader.getCaps(config);
+        appiumHubUrl = capabilitiesReader.getAppiumHubURL(config);
+
+        // Initialize the driver based upon those values
         logger.log(Level.INFO, "Configuring a new session");
-        driver = new DriverFactory().initDriver(caps);
+        driver = new DriverFactory().initDriver(caps, appiumHubUrl);
     }
 
     @After(order = 0)
