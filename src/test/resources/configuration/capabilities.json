@@ -20,8 +20,8 @@
         "access_key": "vVvkxq2qa6UwafYxPPB1",
         "app": "bs://f9582bdf7587edc5e2f8d35932deb8b805014749",
         "project": "Mobile Test Framework",
-        "build": "Sprint #1",
-        "name": "Sanity",
+        "build": "Unknown build",
+        "name": "Unknown name",
         "browserstack.debug": true
     }
 }

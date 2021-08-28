@@ -102,20 +102,54 @@ public class CapabilitiesReader {
         }
 
         // 3. Set capabilities according to the target environment
-        String targetEnv = getTargetEnv(true);
-        JSONObject targetCapabilities = (JSONObject) config.get(targetEnv);
-        Map<String, Object> targetMap = targetCapabilities.toMap();
-        it = targetMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            if (System.getenv(pair.getKey().toString()) == null) {
-                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+pair.getValue().toString()+" (from "+CAPABILITIES_FILE+")");
-                caps.setCapability(pair.getKey().toString(), pair.getValue().toString());
-            }
-            else {
-                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+System.getenv(pair.getKey().toString())+" (from system environment)");
-                caps.setCapability(pair.getKey().toString(), System.getenv(pair.getKey().toString()));
-            }
+        String targetEnv = getTargetEnv(true); // The string has only 2 possible values: local or browserstack
+        switch (targetEnv) {
+            case "local":
+                // Set the capability "app" from the system env variable or from the capabilities file
+                String app = System.getenv("app");
+                if(app == null) {
+                    caps.setCapability("app", config.getJSONObject(targetEnv).getString("app"));
+                }
+                else {
+                    caps.setCapability("app", app);
+                }
+                break;
+
+            case "browserstack":
+                // Set the capability "app" from the system variable BROWSERSTACK_APP_ID or from the cap file
+                String bsApp = System.getenv("BROWSERSTACK_APP_ID");
+                if(bsApp == null) {
+                    caps.setCapability("app", config.getJSONObject(targetEnv).getString("app"));
+                }
+                else {
+                    caps.setCapability("app", bsApp);
+                }
+
+                // Set the capability "project"
+                caps.setCapability("project", config.getJSONObject(targetEnv).getString("project"));
+
+                // Set the capability "build" from the system variable BROWSERSTACK_BUILD_NAME or from the cap file
+                String bsBuildName = System.getenv("BROWSERSTACK_BUILD_NAME");
+                if(bsBuildName == null) {
+                    caps.setCapability("build", config.getJSONObject(targetEnv).getString("build"));
+                }
+                else {
+                    caps.setCapability("build", bsBuildName);
+                }
+
+                // Set the capability "name" from the Jenkins system variable JOB_NAME or from the cap file
+                String bsJobName = System.getenv("JOB_NAME");
+                if(bsJobName == null) {
+                    caps.setCapability("name", config.getJSONObject(targetEnv).getString("name"));
+                }
+                else {
+                    caps.setCapability("name", bsJobName);
+                }
+
+                // Set the debug mode
+                caps.setCapability("browserstack.debug", config.getJSONObject(targetEnv).getString("browserstack.debug"));
+
+                break;
         }
 
         return caps;
