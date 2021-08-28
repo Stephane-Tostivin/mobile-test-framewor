@@ -1,20 +1,27 @@
 {
-    "platformName": "Android",
-    "platformVersion":"11",
-    "deviceName":"PixelXL28",
-    "appPackage":"com.experitest.eribank",
-    "appActivity":"com.experitest.ExperiBank.LoginActivity",
-    "appLocation":"C:\\Users\\Stephane\\IdeaProjects\\mobileTestFramework\\src\\test\\resources\\eribank.apk",
-
-    "localEnv": {
-        "target": "local",
-        "url": "http://127.0.0.1:4723/wd/hub"
+    "capabilities": {
+        "automationName": "UIAutomator2"
     },
 
-    "BrowserStackEnv" : {
-        "target": "BrowserStack",
+    "devices": {
+        "platformName": "Android",
+        "platformVersion":"9.0",
+        "deviceName":"PixelXL28"
+    },
+
+    "local": {
+        "server": "127.0.0.1:4723",
+        "app":"C:\\Users\\Stephane\\IdeaProjects\\mobileTestFramework\\src\\test\\resources\\eribank.apk"
+    },
+
+    "browserstack" : {
         "server": "hub-cloud.browserstack.com",
         "username": "stphanetostivin_H4MPCR",
-        "access_key": "vVvkxq2qa6UwafYxPPB1"
+        "access_key": "vVvkxq2qa6UwafYxPPB1",
+        "app": "bs://f9582bdf7587edc5e2f8d35932deb8b805014749",
+        "project": "Mobile Test Framework",
+        "build": "Sprint #1",
+        "name": "Sanity",
+        "browserstack.debug": true
     }
 }

@@ -1,6 +1,5 @@
 package org.example.utils;
 
-import io.appium.java_client.remote.MobileCapabilityType;
 import org.example.factory.DriverFactory;
 import org.json.JSONObject;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -10,6 +9,8 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,10 @@ public class CapabilitiesReader {
     // Logger
     static Logger logger = Logger.getLogger(CapabilitiesReader.class.getName());
 
+    /**
+     * Read the capabilities file
+     * @return a JSONObject with the content of the file
+     */
     public static JSONObject getConfiguration() {
         String text = null;
         try {
@@ -30,58 +35,88 @@ public class CapabilitiesReader {
         } catch (URISyntaxException e) {
             logger.log(Level.SEVERE, "Error parsing the file: " + CAPABILITIES_FILE);
         }
-        JSONObject configuration = new JSONObject(text);
-        return configuration;
+        return new JSONObject(text);
     }
+
+
     /**
-     * Load from file capabilities.json the mobile capabilities
+     * Get the target environment for tests
+     * The target may be set from the system environment variable targetSUT
+     * If not, the default value is "local"
+     * @param verbose Verbose mode
+     * @return the name of the target environment
+     */
+    private static String getTargetEnv(boolean verbose) {
+        String targetEnv = System.getenv("targetSUT").toLowerCase();
+
+        if (!targetEnv.equals("browserstack")) {
+            // If system variable targetSUT is not defined or has not an expected value, default env is local
+            targetEnv = "local";
+        }
+
+        if (verbose) {
+            logger.log(Level.INFO, "Target test environment: " + targetEnv);
+        }
+        return targetEnv;
+    }
+
+    /**
+     * Get the desired capabilities from the system env and/or the capabilities json file
+     * The caps read in the capabilities file are taken into account
+     * Except if a variable with the cap name is provided in the system environment, in that case it takes precedence
      * @return DesiredCapabilities
      */
     public static DesiredCapabilities getCaps(JSONObject config) {
         DesiredCapabilities caps = new DesiredCapabilities();
 
-        // By default we take the value from capabilities files
-        // Except if a system env variable is defined with the expected name
-        // It allows the user or Jenkins to change the capabilities on the fly
-
-        // PlatformName
-        String platformName = System.getenv("PLATFORM_NAME");
-        if(platformName == null) {
-            caps.setCapability(MobileCapabilityType.PLATFORM_NAME, config.get("platformName"));
-        } else {
-            caps.setCapability(MobileCapabilityType.PLATFORM_NAME, platformName);
-        }
-
-        // PlatformVersion
-        String platformVersion = System.getenv("PLATFORM_VERSION");
-        if(platformVersion == null) {
-            caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, config.get("platformVersion"));
-        } else {
-            caps.setCapability(MobileCapabilityType.PLATFORM_VERSION, platformVersion);
-        }
-
-        // DeviceName
-        String deviceName = System.getenv("DEVICE_NAME");
-        if(deviceName == null) {
-            caps.setCapability(MobileCapabilityType.DEVICE_NAME, config.get("deviceName"));
-        } else {
-            caps.setCapability(MobileCapabilityType.DEVICE_NAME, deviceName);
-        }
-
-        // Set the package location as capability APP only if installation is required
-        String installRequired = System.getenv("TO_INSTALL");
-        String appLocation = System.getenv("APP_LOCATION");
-        if(installRequired != null) {
-            // The APP should be installed from a given location, or by default from the path given in the capabilities file
-            logger.log(Level.INFO, "Capability APP set ==> new installation of the application");
-            if(appLocation == null) {
-                caps.setCapability(MobileCapabilityType.APP, config.get("appLocation"));
-            } else {
-                caps.setCapability(MobileCapabilityType.APP, appLocation);
+        // 1. Set the common capabilities
+        JSONObject commonCapabilities = (JSONObject) config.get("capabilities");
+        Map<String, Object> commonMap = commonCapabilities.toMap();
+        Iterator it = commonMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            if (System.getenv(pair.getKey().toString()) == null) {
+                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+pair.getValue().toString()+" (from "+CAPABILITIES_FILE+")");
+                caps.setCapability(pair.getKey().toString(), pair.getValue().toString());
+            }
+            else {
+                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+System.getenv(pair.getKey().toString())+" (from system environment)");
+                caps.setCapability(pair.getKey().toString(), System.getenv(pair.getKey().toString()));
             }
         }
-        caps.setCapability("appActivity", config.get("appActivity"));
-        caps.setCapability("appPackage", config.get("appPackage"));
+
+        // 2. Set the device capabilities
+        JSONObject deviceCapabilities = (JSONObject) config.get("devices");
+        Map<String, Object> deviceMap = deviceCapabilities.toMap();
+        it = deviceMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            if (System.getenv(pair.getKey().toString()) == null) {
+                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+pair.getValue().toString()+" (from "+CAPABILITIES_FILE+")");
+                caps.setCapability(pair.getKey().toString(), pair.getValue().toString());
+            }
+            else {
+                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+System.getenv(pair.getKey().toString())+" (from system environment)");
+                caps.setCapability(pair.getKey().toString(), System.getenv(pair.getKey().toString()));
+            }
+        }
+
+        // 3. Set capabilities according to the target environment
+        String targetEnv = getTargetEnv(true);
+        JSONObject targetCapabilities = (JSONObject) config.get(targetEnv);
+        Map<String, Object> targetMap = targetCapabilities.toMap();
+        it = targetMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            if (System.getenv(pair.getKey().toString()) == null) {
+                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+pair.getValue().toString()+" (from "+CAPABILITIES_FILE+")");
+                caps.setCapability(pair.getKey().toString(), pair.getValue().toString());
+            }
+            else {
+                logger.log(Level.INFO, "Capability "+pair.getKey().toString()+" = "+System.getenv(pair.getKey().toString())+" (from system environment)");
+                caps.setCapability(pair.getKey().toString(), System.getenv(pair.getKey().toString()));
+            }
+        }
 
         return caps;
     }
@@ -93,51 +128,34 @@ public class CapabilitiesReader {
      */
     public static String getAppiumHubURL(JSONObject config) {
         String AppiumHubURL = null;
+        String targetEnv = getTargetEnv(false); // The string has only 2 possible values: local or browserstack
 
-        // Read the targeted System Under Test from the system environment variable TARGET_SUT
-        // By default: local
-        String targetSUT = System.getenv("TARGET_SUT");
-        if(targetSUT == null) {
-            targetSUT = "local";
-        }
+        switch (targetEnv) {
+            case "local":
+                AppiumHubURL = "http://"+config.getJSONObject(targetEnv).getString("server")+"/wd/hub";
+                break;
 
-        logger.log(Level.INFO, "The test system is: " + targetSUT);
+            case "browserstack":
+                // Check if BROWSERSTACK_USERNAME is defined as system env variable
+                // Otherwise we take the value in the capabilities files
+                String username = System.getenv("BROWSERSTACK_USERNAME");
+                if(username == null) {
+                    username = config.getJSONObject(targetEnv).getString("username");
+                }
 
-        // Get the Appium URL if target is local
-        if(targetSUT.equalsIgnoreCase("local")) {
-            AppiumHubURL = config.getJSONObject("localEnv").getString("url");
-        }
+                // Check if BROWSERSTACK_ACCESS_KEY is defined as system env variable
+                // Otherwise we take the value in the capabilities files
+                String accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
+                if(accessKey == null) {
+                    accessKey = config.getJSONObject(targetEnv).getString("access_key");
+                }
 
-        // Get the Appium URL if target is BrowserStack
-        else if(targetSUT.equalsIgnoreCase("browserstack")) {
-            // Check if BROWSERSTACK_USERNAME is defined as system env variable
-            // Otherwise we take the value in the capabilities files
-            String username = System.getenv("BROWSERSTACK_USERNAME");
-            if(username == null) {
-                username = config.getJSONObject("BrowserStackEnv").getString("username");
-            }
-
-            // Check if BROWSERSTACK_ACCESS_KEY is defined as system env variable
-            // Otherwise we take the value in the capabilities files
-            String accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
-            if(accessKey == null) {
-                accessKey = config.getJSONObject("BrowserStackEnv").getString("access_key");
-            }
-
-            // Build the URL
-            AppiumHubURL = "http://"+username+":"+accessKey+"@"+config.getJSONObject("BrowserStackEnv").getString("server")+"/wd/hub";
-        }
-
-        // Get the Appium URL as a local one if incorrect value for system variable has been given
-        else {
-            logger.log(Level.SEVERE, "The System Under Test targeted: " + targetSUT + " is unknown!");
-            logger.log(Level.SEVERE, "Default local SUT will be considered instead");
-            AppiumHubURL = config.getJSONObject("localEnv").getString("url");
+                AppiumHubURL = "http://"+username+":"+accessKey+"@"+config.getJSONObject(targetEnv).getString("server")+"/wd/hub";
+                break;
         }
 
         logger.log(Level.INFO, "URL of the Appium server: " + AppiumHubURL);
         return AppiumHubURL;
-
     }
 
 }
