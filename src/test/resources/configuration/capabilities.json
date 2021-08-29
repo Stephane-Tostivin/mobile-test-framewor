@@ -22,6 +22,6 @@
         "project": "Mobile Test Framework",
         "build": "Unknown build",
         "name": "Unknown name",
-        "browserstack.debug": true
+        "browserstack.debug": "true"
     }
 }
